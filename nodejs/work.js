@@ -1,27 +1,29 @@
 import { workerData, parentPort } from 'worker_threads'
 
+// console.log(workerData)
 
 
-// parentPort.postMessage(sleep(WorkerData.ms))
+// parentPort.once("message",message => {
+//     console.log("sdfsd",message)
+//     await sleep(message);
+//     parentPort.postMessage("done");
+// })
 
-// function sleep(ms) {
-//     return new Promise((resolve) => {
-//       setTimeout(resolve, ms,"done");
-//     });
-// }
+function sleep ( n ) { 
+    var start = new Date().getTime() ;
+    while ( true ) {
+        if ( new Date( ).getTime( ) - start > n ) {
+            // 使用  break  实现；
+            break;
+        }
+    }
+}
 
 
 
 parentPort.postMessage(getFibonacciNumber(workerData.num))
 
 function getFibonacciNumber(num) {
-    if (num === 0) {
-        return 0;
-    }
-    else if (num === 1) {
-        return 1;
-    }
-    else {
-        return getFibonacciNumber(num - 1) + getFibonacciNumber(num - 2);
-    }
+    sleep(50000);
+    return "done";
 }

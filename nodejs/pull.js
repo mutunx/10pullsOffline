@@ -4,10 +4,10 @@ export default class pull {
     
 
 
-    start() {
+    async start() {
         console.clear();
         let result = this.doPull();
-        this.showLoading(2000);
+        await this.showLoading(2000);
         this.showResult(result);
     }
 
@@ -17,23 +17,25 @@ export default class pull {
     }
 
     async showLoading(ms) {
-        const worker = new Worker("./work.js",{WorkerData:{"ms":ms}});
+        const worker = new Worker("./work.js");
         let done = true;
-        if (isMainThread) {
-            worker.once("message",(msg) => {
-                console.log(msg)
-                if (msg !== "done") process.exit();
-                done = false;
-            })
-            let index = 0;
-            while(done) {
-                if (index === this.testval.length - 1) index = 0;
-                console.log(this.testval[index++]);
-                this.sleep(2000);
-            }
-        } 
-
-
+        worker.postMessage(ms)
+        worker.once("message",(msg) => {
+            console.log(msg)
+            if (msg !== "done") process.exit();
+            done = false;
+        })
+        worker.on("error", error => {
+            console.log(error);
+        })
+        let index = 0;
+        // while(done) {
+            
+        //     if (index === this.testval.length - 1) index = 0;
+        //     console.log(this.testval[index++]);
+        //     await this.sleep(1000);
+        // }
+        await this.sleep(5000);
     }
     showResult(result) {
         console.log(result);
