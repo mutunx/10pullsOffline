@@ -4,7 +4,7 @@ const json = JSON.parse(
     new URL('../data/Arknights.json', import.meta.url)
   )
 );
-let result = Object.values(json).filter(x=> x.subProfessionId !== "notchar2").map(x=>[x.name,x.rarity])
+let result = Object.values(json).filter(x=> !x.subProfessionId.includes("notchar") && !x.isNotObtainable).map(x=>[x.name,x.rarity])
 // console.log(result);
 
 export default result;
