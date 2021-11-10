@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer'
-import pull from './pull.js'
+import pull from './Pull.js'
 
 
 const choicesMapMethod = {
@@ -27,6 +27,7 @@ function initMessage() {
 async function pulls() {
     let pullObj = new pull();
     pullObj.start();
+    pullObj.showResult();
 }
 
 function statistic() {

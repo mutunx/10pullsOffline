@@ -1,48 +1,58 @@
 import {Worker, isMainThread, parentPort, workerData} from "worker_threads"
+import pullData from './data/Arknights.js';
+import utils from "./Utils.js";
+import Constants from "./Constants.js"
+import stdout from "./Stdout.js";
 export default class pull {
-    testval = [1,2,3,4,5,6,7,8,9,10]
-    
-
-
+    colorMap = Constants.COLOR_MAP;
+    pullResults = [];
     async start() {
         console.clear();
-        let result = this.doPull();
-        await this.showLoading(2000);
-        this.showResult(result);
+        for (let i = 0; i < 10; i++) {
+            let result = this.doPull();
+            await this.showLoading(1000);
+            this.showResult(result);
+        }
     }
 
     doPull() {
-        // let index = getRandomNumber();
-        return this.testval[6];        
+        let index = utils.random(0,pullData.length-1);
+        return pullData[index];        
     }
 
     async showLoading(ms) {
-        const worker = new Worker("./work.js");
-        let done = true;
-        worker.postMessage(ms)
+        const {colorMap} = this;
+        const that = this;
+        const worker = new Worker("./Sleep.js",{workerData:{ms:ms}});
+        let done = false;
         worker.once("message",(msg) => {
-            console.log(msg)
             if (msg !== "done") process.exit();
-            done = false;
+            done = true;
         })
         worker.on("error", error => {
             console.log(error);
         })
-        let index = 0;
-        // while(done) {
-            
-        //     if (index === this.testval.length - 1) index = 0;
-        //     console.log(this.testval[index++]);
-        //     await this.sleep(1000);
-        // }
-        await this.sleep(5000);
+        let tickId = setTimeout(function load() {
+            if (done) {
+                clearTimeout(tickId);
+                return ;
+            }
+            stdout.cursorTo(utils.bytes(that.pullResults.map(x=>x[0]).join(", ")));
+            let obj = pullData[utils.random(0,pullData.length-1)];
+            let name = obj[0];
+            while (utils.bytes(name) != 10) name += " ";
+            stdout.write(" "+ colorMap[obj[1]](name));
+            tickId = setTimeout(load,40)
+          }, 40);
+        await utils.sleep(ms);
     }
     showResult(result) {
-        console.log(result);
+        const {colorMap} = this;
+        if (!!result){
+            this.pullResults.push(result);
+        }
+        stdout.clear();
+        stdout.write(this.pullResults.map(x=> colorMap[x[1]](x[0])).join(', '));
     }
-    sleep(ms) {
-        return new Promise((resolve) => {
-          setTimeout(resolve, ms);
-        });
-    }
+    
 }
