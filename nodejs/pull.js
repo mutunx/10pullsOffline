@@ -23,7 +23,7 @@ export default class pull {
     async showLoading(ms) {
         const {colorMap} = this;
         const that = this;
-        const worker = new Worker("./Sleep.js",{workerData:{ms:ms}});
+        const worker = new Worker("./Sleep.js",{workerData:{ms:ms-40}});
         let done = false;
         worker.once("message",(msg) => {
             if (msg !== "done") process.exit();
