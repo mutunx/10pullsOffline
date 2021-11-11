@@ -24,7 +24,7 @@ export default class pull {
     }
 
     doPull() {
-        let index = utils.random(0,pullData.length-1);
+        let index = utils.pullOne("Arknights");
         return pullData[index];        
     }
 
