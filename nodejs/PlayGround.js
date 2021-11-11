@@ -1,3 +1,3 @@
-import chalk from 'chalk';
-
-console.log(chalk.blue("dsfsdddddd"));
+// 五星出率为 8%
+// 六星出率为 2%
+// 前十次中必定中五星 “及” 以上的干员

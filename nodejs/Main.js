@@ -27,15 +27,13 @@ async function initMessage() {
 
 async function pulls() {
     
-    pullObj.start();
+    await pullObj.start();
     const answer = await inquirer.prompt([{
         type: 'confirm',
         name: 'continue',
-        message: pullObj.semanticsResult()
+        message: `\n已花费cost${pullObj.cost}是否继续？`
       }]);
-    if (answer) {
-        menu();
-    }
+    return (answer.continue) ? pulls() : menu();
 
 }
 async function getTody() {

@@ -5,14 +5,22 @@ import Constants from "./Constants.js"
 import stdout from "./Stdout.js";
 export default class pull {
     colorMap = Constants.COLOR_MAP;
+    cost = 0;
     pullResults = [];
     async start() {
-        console.clear();
+        
+        this.reset();
+        this.cost += 6400;
         for (let i = 0; i < 10; i++) {
             let result = this.doPull();
             await this.showLoading(1000);
             this.showResult(result);
         }
+    }
+
+    reset() {
+        stdout.clear();
+        this.pullResults = [];
     }
 
     doPull() {

@@ -1,5 +1,5 @@
 export default class Stdout {
-    static clear(split) {
+    static clear() {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line
     
