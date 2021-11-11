@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer'
+import http from './http.js';
 import pull from './Pull.js'
 
-
+const pullObj = new pull();;
 const choicesMapMethod = {
     "抽!":pulls,
     "统计":statistic,
@@ -19,29 +20,59 @@ const questions = {
     },
 }
 
-function initMessage() {
-    
-    questions.message = "What size do you need?"
+async function initMessage() {
+    questions.message = await getTody();
+    menu();
 }
 
 async function pulls() {
-    let pullObj = new pull();
+    
     pullObj.start();
-    pullObj.showResult();
-}
+    const answer = await inquirer.prompt([{
+        type: 'confirm',
+        name: 'continue',
+        message: pullObj.semanticsResult()
+      }]);
+    if (answer) {
+        menu();
+    }
 
-function statistic() {
-    console.log("statistic");
+}
+async function getTody() {
+    let res = await http.Get("http://timor.tech/api/holiday/info");
+    if (!!!res.data) return "你没联网";
+        let obj = res.data;
+        if (obj.code === -1) return "接口服务器出错";
+        let dayName = obj.type.name;
+        let workType = ([0,3].includes(obj.type.type)) ? "上班":"加班";
+        let result = `今天是${dayName},${workType}的你惨兮兮`;
+        if (obj.holiday && obj.holiday.holiday) {
+            result += ",不过按道理来说你今天可以拿到${obj.wage}倍工资"
+        }
+        return result;
+}
+async function statistic() {
+    const answer = await inquirer.prompt([{
+        type: 'confirm',
+        name: 'continue',
+        message: pullObj.semanticsResult()
+      }]);
+    if (answer) {
+        menu();
+    }
 }
 
 function quit() {
-    console.log("quit")
+    process.exit();
 }
 
 
 initMessage();
-inquirer
+
+function menu() {
+    inquirer
     .prompt(questions)
     .then((answer) => {
         choicesMapMethod[answer.type]();
     })
+}

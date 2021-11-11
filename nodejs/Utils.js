@@ -1,4 +1,4 @@
-export default class {
+export default class Utils {
     static random(min,max) {
         min = Math.ceil(min);
         max = Math.floor(max);

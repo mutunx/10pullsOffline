@@ -47,12 +47,16 @@ export default class pull {
         await utils.sleep(ms);
     }
     showResult(result) {
-        const {colorMap} = this;
         if (!!result){
             this.pullResults.push(result);
         }
         stdout.clear();
-        stdout.write(this.pullResults.map(x=> colorMap[x[1]](x[0])).join(', '));
+        stdout.write(this.semanticsResult());
+    }
+
+    semanticsResult(result = this.pullResults) {
+        const {colorMap} = this;
+        return result.map(x=> colorMap[x[1]](x[0])).join(', ');
     }
     
 }
