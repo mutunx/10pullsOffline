@@ -41,7 +41,8 @@ function pull(count,data){
     
 }
 let count = 0;
-console.clear();
+process.stdout.clearLine();
+process.stdout.cursorTo(0);
 for (var i = 0; i < 100; i++ ){
     if (i % 10 === 0) process.stdout.write("\n")
     let obj = pull(count,pullData);
