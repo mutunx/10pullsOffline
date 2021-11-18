@@ -1,7 +1,8 @@
-import chalk from 'chalk';
 import inquirer from 'inquirer'
 import http from './http.js';
 import pull from './Pull.js'
+import Constants from './Constants.js';
+import Utils from './Utils.js';
 
 const pullObj = new pull();;
 const choicesMapMethod = {
@@ -50,14 +51,26 @@ async function getTody() {
         return result;
 }
 async function statistic() {
+    console.log(pullObj.history.map(x=>x.map(y => Constants.COLOR_MAP[y.rarity](y.name))).join("\n"));
+    
+    let staticInfo = [0,1,2,3,4,5].map(x=> getStatisticInfo(pullObj.history.flat(),x)).join(" ")
+    
+    console.log(staticInfo);
     const answer = await inquirer.prompt([{
         type: 'confirm',
         name: 'continue',
-        message: pullObj.semanticsResult()
+        message: "继续"
       }]);
     if (answer) {
         menu();
     }
+}
+
+function getStatisticInfo(data,rarity) {
+    let rarityCount = data.filter(x=>x.rarity === rarity).length ?? 0;
+    let rarityProbability = (rarityCount / data.length).toFixed(2) * 100;
+    let statisticInfo = `${rarity} ★ :${rarityCount}(${rarityProbability}%) `;
+    return Constants.COLOR_MAP[rarity](statisticInfo)
 }
 
 function quit() {

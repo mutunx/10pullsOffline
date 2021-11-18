@@ -9,15 +9,17 @@ export default class pull {
     cost = 0;
     count = 0;
     pullResults = [];
+    history = [];
     async start() {
         
         this.reset();
         this.cost += 6400;
         for (let i = 0; i < 10; i++) {
             let result = this.doPull();
-            await this.showLoading(200);
+            await this.showLoading(100);
             this.showResult(result);
         }
+        this.history.push(this.pullResults);
     }
 
     reset() {
@@ -56,7 +58,7 @@ export default class pull {
         await utils.sleep(ms);
     }
     showResult(result) {
-        if (!!result){
+        if (result){
             this.pullResults.push(result);
         }
         stdout.clear();
