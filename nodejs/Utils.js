@@ -21,10 +21,6 @@ export default class Utils {
         return bytes;
     }
 
-    static pullOne(name) {
-        
-    }
-
     static groupBy(objectArray, property) {
         return objectArray.reduce(function (acc, obj) {
           var key = obj[property];
