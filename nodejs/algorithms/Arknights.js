@@ -32,8 +32,8 @@ export default class Arknights {
             let minimum = utils.random(1,10);
             rarity = (minimum < sixPrecent) ? 5 : 4;
         } 
-    
-        let pullArray = data[""+rarity];
+        let pullRarity = rarity === 3 ? "canBePull":rarity.toString();
+        let pullArray = data[pullRarity];
         let obj = pullArray[utils.random(0,pullArray.length-1)];
 
         // 保存

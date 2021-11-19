@@ -5,9 +5,9 @@
 // 提升至4％。如果该次还没有寻访到6星干员，则下一次寻访获得6星的概率由4％提升到6％。依此类推
 // ，每次提高2％获得6星干员的概率，直至达到100％时必定获得6星干员。
 
-import Constants from "./Constants.js"
-import utils from "./Utils.js";
-import pullData from './data/Arknights.js';
+import Constants from "./nodejs/Constants.js"
+import utils from "./nodejs/Utils.js";
+import pullData from './nodejs/data/Arknights.js';
 let fivePrecent = 8;
 let sixPrecent = 2;
 let result = {
