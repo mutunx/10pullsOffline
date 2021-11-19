@@ -7,19 +7,20 @@ import Arknights from "./algorithms/Arknights.js";
 export default class pull {
     colorMap = Constants.COLOR_MAP;
     cost = 0;
-    count = 0;
+    count = 1;
     pullResults = [];
     history = [];
     async start() {
         
         this.reset();
-        this.cost += 6400;
+        this.cost += 6000;
         for (let i = 0; i < 10; i++) {
             let result = this.doPull();
             await this.showLoading(100);
             this.showResult(result);
         }
         this.history.push(this.pullResults);
+        await utils.sleep(200);
     }
 
     reset() {

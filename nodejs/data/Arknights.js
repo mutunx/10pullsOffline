@@ -11,7 +11,6 @@ let result = utils.groupBy(data,"rarity");
 let threeBelows = result["3"];
 threeBelows.push(...result["2"]);
 threeBelows.push(...result["1"]);
-threeBelows.push(...result["0"]);
 result["3below"] = threeBelows;
 result["all"] = data;
 // console.log(Object.keys(result));

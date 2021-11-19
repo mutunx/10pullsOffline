@@ -8,6 +8,7 @@ const pullObj = new pull();;
 const choicesMapMethod = {
     "抽!":pulls,
     "统计":statistic,
+    "重置":reset,
     "退出":quit,
 }
 
@@ -30,11 +31,12 @@ async function pulls() {
     
     await pullObj.start();
     const answer = await inquirer.prompt([{
-        type: 'confirm',
+        type: 'list',
         name: 'continue',
-        message: `\n已花费cost${pullObj.cost}是否继续？`
+        choices: ["继续","回主菜单"],
+        message: `\n已花费RMB${(pullObj.cost/180*6).toFixed(2)}是否继续？`
       }]);
-    return (answer.continue) ? pulls() : menu();
+    return (answer.continue === "继续") ? pulls() : menu();
 
 }
 async function getTody() {
@@ -53,23 +55,26 @@ async function getTody() {
 async function statistic() {
     console.log(pullObj.history.map(x=>x.map(y => Constants.COLOR_MAP[y.rarity](y.name))).join("\n"));
     
-    let staticInfo = [0,1,2,3,4,5].map(x=> getStatisticInfo(pullObj.history.flat(),x)).join(" ")
+    let staticInfo = [0,1,2,3,4,5].map(x=> getStatisticInfo(pullObj.history.flat(),x)).join(" ");
+    let cost = pullObj.cost;
+    staticInfo += `总共${pullObj.count}抽,花费${cost}合成玉约合人民币${(cost/180*6).toFixed(2)}元`;
     
     console.log(staticInfo);
     const answer = await inquirer.prompt([{
-        type: 'confirm',
+        type: 'list',
         name: 'continue',
-        message: "继续"
+        choices: ["回主菜单"],
+        message: ""
       }]);
-    if (answer) {
+    if (answer.continue === "回主菜单") {
         menu();
     }
 }
 
 function getStatisticInfo(data,rarity) {
     let rarityCount = data.filter(x=>x.rarity === rarity).length ?? 0;
-    let rarityProbability = (rarityCount / data.length).toFixed(2) * 100;
-    let statisticInfo = `${rarity} ★ :${rarityCount}(${rarityProbability}%) `;
+    let rarityProbability = (rarityCount / data.length * 100).toFixed(2) ;
+    let statisticInfo = `${rarity+1} ★ :${rarityCount}(${rarityProbability}%) `;
     return Constants.COLOR_MAP[rarity](statisticInfo)
 }
 
@@ -77,7 +82,20 @@ function quit() {
     process.exit();
 }
 
-
+async function reset() {
+    pullObj.history = [];
+    pullObj.count = 1;
+    pullObj.cost = 0;
+    const answer = await inquirer.prompt([{
+        type: 'list',
+        name: 'continue',
+        choices: ["回主菜单"],
+        message: "重置成功"
+      }]);
+    if (answer.continue === "回主菜单") {
+        menu();
+    }
+}
 initMessage();
 
 function menu() {
