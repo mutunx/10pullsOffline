@@ -50,7 +50,7 @@ export default class pull {
                 return ;
             }
             stdout.cursorTo(utils.bytes(that.pullResults.map(x=>x.name).join(", ")));
-            let obj = pullData["all"][utils.random(0,pullData["all"].length-1)];
+            let obj = pullData["loading"][utils.random(0,pullData["loading"].length-1)];
             let name = obj.name;
             while (utils.bytes(name) != 10) name += " ";
             stdout.write(" "+ colorMap[obj.rarity](name));

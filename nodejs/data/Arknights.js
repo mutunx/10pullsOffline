@@ -15,7 +15,7 @@ let canBePull = [...result["3"]];
 canBePull.push(...result["2"]);
 canBePull.push(...result["1"]);
 result["canBePull"] = canBePull;
-result["all"] = data;
+result["loading"] = data;
 // console.log(Object.keys(result));
 
 export default result;
