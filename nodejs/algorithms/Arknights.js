@@ -14,11 +14,11 @@ export default class Arknights {
         4:[],
         5:[]
     }
-    static pullOne(count){
+    static pull(pullInfo){
         const {result,rarityProbability} = this;
         let {fivePrecent,sixPrecent} = rarityProbability;
         // 50以上
-        if (count >= 50 && result[5] == 0) {
+        if (pullInfo.count >= 50 && result[5] == 0) {
             sixPrecent += 2;
         } 
         let num = utils.random(1,100);
@@ -28,7 +28,7 @@ export default class Arknights {
             sixPrecent = 2;
         }
         // 保底
-        if (count == 10 && result[4] == 0 && result[5] == 0) {
+        if (pullInfo.count == 10 && result[4] == 0 && result[5] == 0) {
             let minimum = utils.random(1,10);
             rarity = (minimum < sixPrecent) ? 5 : 4;
         } 
@@ -38,7 +38,8 @@ export default class Arknights {
 
         // 保存
         result[rarity].push(obj);
-
+        pullInfo.cost += 600;
+        pullInfo.count++;
         return obj;
         
     }

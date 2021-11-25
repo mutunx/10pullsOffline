@@ -5,15 +5,15 @@ import Constants from "./Constants.js"
 import stdout from "./Stdout.js";
 import Arknights from "./algorithms/Arknights.js";
 export default class pull {
-    colorMap = Constants.COLOR_MAP;
-    cost = 0;
-    count = 1;
+    pullInfo = {
+        cost: 0,
+        count: 0,
+    }
     pullResults = [];
     history = [];
     async start() {
         
         this.reset();
-        this.cost += 6000;
         for (let i = 0; i < 10; i++) {
             let result = this.doPull();
             await this.showLoading(100);
@@ -29,11 +29,10 @@ export default class pull {
     }
 
     doPull() {
-        return Arknights.pullOne(this.count++);
+        return Arknights.pull(this.pullInfo);
     }
 
     async showLoading(ms) {
-        const {colorMap} = this;
         const that = this;
         const worker = new Worker("./Sleep.js",{workerData:{ms:ms-40}});
         let done = false;
@@ -53,7 +52,7 @@ export default class pull {
             let obj = pullData["loading"][utils.random(0,pullData["loading"].length-1)];
             let name = obj.name;
             while (utils.bytes(name) != 10) name += " ";
-            stdout.write(" "+ colorMap[obj.rarity](name));
+            stdout.write(" "+ Constants.COLOR_MAP[obj.rarity](name));
             tickId = setTimeout(load,40)
           }, 40);
         await utils.sleep(ms);
@@ -67,8 +66,7 @@ export default class pull {
     }
 
     semanticsResult(result = this.pullResults) {
-        const {colorMap} = this;
-        return result.map(x=> colorMap[x.rarity](x.name)).join(', ');
+        return result.map(x=> Constants.COLOR_MAP[x.rarity](x.name)).join(', ');
     }
     
 }

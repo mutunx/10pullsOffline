@@ -1,5 +1,5 @@
 import inquirer from 'inquirer'
-import http from './http.js';
+import Http from './Http.js';
 import pull from './Pull.js'
 import Constants from './Constants.js';
 import Utils from './Utils.js';
@@ -34,13 +34,13 @@ async function pulls() {
         type: 'list',
         name: 'continue',
         choices: ["继续","回主菜单"],
-        message: `\n已花费RMB${(pullObj.cost/180*6).toFixed(2)}是否继续？`
+        message: `\n已花费RMB${(pullObj.pullInfo.cost/180*6).toFixed(2)}是否继续？`
       }]);
     return (answer.continue === "继续") ? pulls() : menu();
 
 }
 async function getTody() {
-    let res = await http.Get("http://timor.tech/api/holiday/info");
+    let res = await Http.Get("http://timor.tech/api/holiday/info?t="+new Date().getTime());
     if (!!!res.data) return "你没联网";
         let obj = res.data;
         if (obj.code === -1) return "接口服务器出错";
@@ -56,8 +56,8 @@ async function statistic() {
     console.log(pullObj.history.map(x=>x.map(y => Constants.COLOR_MAP[y.rarity](y.name))).join("\n"));
     
     let staticInfo = [0,1,2,3,4,5].map(x=> getStatisticInfo(pullObj.history.flat(),x)).join(" ");
-    let cost = pullObj.cost;
-    staticInfo += `总共${pullObj.count}抽,花费${cost}合成玉约合人民币${(cost/180*6).toFixed(2)}元`;
+    let cost = pullObj.pullInfo.cost;
+    staticInfo += `总共${pullObj.pullInfo.count}抽,花费${cost}合成玉约合人民币${(cost/180*6).toFixed(2)}元`;
     
     console.log(staticInfo);
     const answer = await inquirer.prompt([{
@@ -84,8 +84,8 @@ function quit() {
 
 async function reset() {
     pullObj.history = [];
-    pullObj.count = 1;
-    pullObj.cost = 0;
+    pullObj.pullInfo.count = 1;
+    pullObj.pullInfo.cost = 0;
     const answer = await inquirer.prompt([{
         type: 'list',
         name: 'continue',
