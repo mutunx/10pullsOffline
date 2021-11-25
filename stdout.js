@@ -1,4 +1,4 @@
-export default class Stdout {
+export default class stdout {
     static clear() {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line

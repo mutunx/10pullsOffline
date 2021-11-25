@@ -1,9 +1,9 @@
 import {Worker, isMainThread, parentPort, workerData} from "worker_threads"
-import pullData from './data/Arknights.js';
-import utils from "./Utils.js";
-import Constants from "./Constants.js"
-import stdout from "./Stdout.js";
-import Arknights from "./algorithms/Arknights.js";
+import pullData from './data/arknights.js';
+import utils from "./utils.js";
+import constants from "./constants.js"
+import stdout from "./stdout.js";
+import arknights from "./algorithms/arknights.js";
 export default class pull {
     pullInfo = {
         cost: 0,
@@ -16,7 +16,7 @@ export default class pull {
         this.reset();
         for (let i = 0; i < 10; i++) {
             let result = this.doPull();
-            await this.showLoading(100);
+            await this.showLoading(600);
             this.showResult(result);
         }
         this.history.push(this.pullResults);
@@ -29,12 +29,12 @@ export default class pull {
     }
 
     doPull() {
-        return Arknights.pull(this.pullInfo);
+        return arknights.pull(this.pullInfo);
     }
 
     async showLoading(ms) {
         const that = this;
-        const worker = new Worker("./Sleep.js",{workerData:{ms:ms-40}});
+        const worker = new Worker("./sleep.js",{workerData:{ms:ms-40}});
         let done = false;
         worker.once("message",(msg) => {
             if (msg !== "done") process.exit();
@@ -52,9 +52,9 @@ export default class pull {
             let obj = pullData["loading"][utils.random(0,pullData["loading"].length-1)];
             let name = obj.name;
             while (utils.bytes(name) != 10) name += " ";
-            stdout.write(" "+ Constants.COLOR_MAP[obj.rarity](name));
-            tickId = setTimeout(load,40)
-          }, 40);
+            stdout.write(" "+ constants.COLOR_MAP[obj.rarity](name));
+            tickId = setTimeout(load,60)
+          }, 60);
         await utils.sleep(ms);
     }
     showResult(result) {
@@ -66,7 +66,7 @@ export default class pull {
     }
 
     semanticsResult(result = this.pullResults) {
-        return result.map(x=> Constants.COLOR_MAP[x.rarity](x.name)).join(', ');
+        return result.map(x=> constants.COLOR_MAP[x.rarity](x.name)).join(', ');
     }
     
 }

@@ -3,7 +3,7 @@ import utils from '../Utils.js';
 
 const json = JSON.parse(
   await readFile(
-    new URL('../../data/Arknights.json', import.meta.url)
+    new URL('../source/Arknights.json', import.meta.url)
   )
 );
 

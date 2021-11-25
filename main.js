@@ -1,8 +1,7 @@
 import inquirer from 'inquirer'
-import Http from './Http.js';
-import pull from './Pull.js'
-import Constants from './Constants.js';
-import Utils from './Utils.js';
+import http from './http.js';
+import pull from './pull.js'
+import constants from './constants.js';
 
 const pullObj = new pull();;
 const choicesMapMethod = {
@@ -40,7 +39,7 @@ async function pulls() {
 
 }
 async function getTody() {
-    let res = await Http.Get("http://timor.tech/api/holiday/info?t="+new Date().getTime());
+    let res = await http.Get("http://timor.tech/api/holiday/info?t="+new Date().getTime());
     if (!!!res.data) return "你没联网";
         let obj = res.data;
         if (obj.code === -1) return "接口服务器出错";
@@ -53,7 +52,7 @@ async function getTody() {
         return result;
 }
 async function statistic() {
-    console.log(pullObj.history.map(x=>x.map(y => Constants.COLOR_MAP[y.rarity](y.name))).join("\n"));
+    console.log(pullObj.history.map(x=>x.map(y => constants.COLOR_MAP[y.rarity](y.name))).join("\n"));
     
     let staticInfo = [0,1,2,3,4,5].map(x=> getStatisticInfo(pullObj.history.flat(),x)).join(" ");
     let cost = pullObj.pullInfo.cost;
@@ -75,7 +74,7 @@ function getStatisticInfo(data,rarity) {
     let rarityCount = data.filter(x=>x.rarity === rarity).length ?? 0;
     let rarityProbability = (rarityCount / data.length * 100).toFixed(2) ;
     let statisticInfo = `${rarity+1} ★ :${rarityCount}(${rarityProbability}%) `;
-    return Constants.COLOR_MAP[rarity](statisticInfo)
+    return constants.COLOR_MAP[rarity](statisticInfo)
 }
 
 function quit() {

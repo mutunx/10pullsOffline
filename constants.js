@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-export default class Constants {
+export default class constants {
     static COLOR_MAP = {
         0: v=> chalk.white(v),
         1: v=> chalk.green(v),
